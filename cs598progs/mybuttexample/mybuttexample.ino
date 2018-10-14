@@ -15,7 +15,6 @@ void setup() {
 }
 
 void loop(){
-  Serial.println(myButton.toggle_state_flag);
   myButton.Update();
   myLED.Update();
   if (myButton.toggle_state_flag == 1){
