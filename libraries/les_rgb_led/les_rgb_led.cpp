@@ -8,23 +8,6 @@ les_rgb_led::les_rgb_led(long on, long off){
     #define GREEN_PIN 9
     #define BLUE_PIN  3
 
-	RedOnTime = on;
-	RedOffTime = off;
-	RedState = LOW; 
-	RedPower = 0;
-	
-	GreenOnTime = on;
-	GreenOffTime = off;
-	GreenState = LOW; 
-	GreenPower = 0;
-	
-	BlueOnTime = on;
-	BlueOffTime = off;
-	BlueState = LOW; 
-	BluePower = 0;
-	
-	
-	RedpreviousMillis = 0;
 }
 
    void les_rgb_led::Setup()
