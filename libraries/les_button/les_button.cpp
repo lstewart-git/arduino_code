@@ -4,11 +4,12 @@
 #include "les_button.h"
 
 
-les_button::les_button(int debounce){
+les_button::les_button(int debounce, int modes){
 
   #define BUTT_PIN 2
 	state_flag = 0;
 	debounce_millis = debounce;
+    num_modes = modes;
 }
 
   void les_button::Setup()
@@ -27,9 +28,9 @@ les_button::les_button(int debounce){
 
 		if (buttval == HIGH) {     // button is pressed
 			last_press_time = currentMillis;
-      state_flag ++;  // increment the 'state' or 'mode'
+            state_flag ++;  // increment the 'state' or 'mode'
       // recycle state to 1, state 0 is the startup state
-			if (state_flag >= 7) state_flag = 1;
+			if (state_flag >= num_modes) state_flag = 1;
 			}
 		}
    }

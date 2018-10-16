@@ -1,5 +1,5 @@
 
-// CS 598 Assignment #2
+// CS 598 Assignment #3
 // by Lawrence E Stewart
 // Oct 17, 2018
 
@@ -19,7 +19,7 @@ int mode_counter = 0;
 
 // instantiate class instances
 les_rgb_led myLED(100);
-les_button myButton(150);
+les_button myButton(250, 6);
 Adafruit_SSD1306 les_screen(12);
 
 // call class setup routines
@@ -41,7 +41,6 @@ void loop(){
   
   // don't do anything until state changes
   if (myButton.state_flag != mode_counter){
-    Serial.println(myButton.state_flag);
     myLED.ShowColor(myButton.state_flag);
     mode_counter = myButton.state_flag;
     ShowMode(mode_counter);}
@@ -61,7 +60,6 @@ void ShowLogo(){
 }
 
 void ShowMode(int mode_counter){
-  Serial.println("in here");
   les_screen.clearDisplay();
   les_screen.setCursor(25,13);
   les_screen.setTextSize(2);
