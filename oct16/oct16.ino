@@ -54,7 +54,7 @@ void ShowLogo(){
   les_screen.setTextColor(WHITE);
   les_screen.setCursor(0,0);
   les_screen.println("Lawrence Stewart");
-  les_screen.println("CS 598 Assignment #3");
+  les_screen.println("Working Draft");
   les_screen.println("October 16, 2018");
   les_screen.display();
 }
@@ -63,12 +63,12 @@ void ShowMode(int mode_counter){
   les_screen.clearDisplay();
   les_screen.setCursor(25,13);
   les_screen.setTextSize(2);
-  if (mode_counter==1)les_screen.println("RED");
-  if (mode_counter==2)les_screen.println("ORANGE");
-  if (mode_counter==3)les_screen.println("YELLOW");
-  if (mode_counter==4)les_screen.println("GREEN");
-  if (mode_counter==5)les_screen.println("BLUE");
-  if (mode_counter==6)les_screen.println("VIOLET");
+  if (mode_counter==1)les_screen.println("MODE 1");
+  if (mode_counter==2)les_screen.println("MODE 2");
+  if (mode_counter==3)les_screen.println("MODE 3");
+  if (mode_counter==4)les_screen.println("MODE 4");
+  if (mode_counter==5)les_screen.println("MODE 5");
+  if (mode_counter==6)les_screen.println("MODE 6");
   les_screen.display();
 }
 
