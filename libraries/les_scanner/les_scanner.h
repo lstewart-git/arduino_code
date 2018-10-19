@@ -11,15 +11,19 @@ les larson scanner driver
 class les_scanner{
 
 	public:
-		les_scanner (int debounce_millis, int modes);
+		les_scanner (int cycle_time);
 		void Setup ();
 		void Update ();
+		void shiftDisplay(byte data);
 
 
 
 	private:
 
-        int something;
+        int cycle_time;
+				unsigned long last_update;
+				int current_position;
+				byte array_argument;
 };
 
 

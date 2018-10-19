@@ -27,7 +27,7 @@ void setup() {
  les_screen.begin(SSD1306_SWITCHCAPVCC, 0x3C);
  myLED.Setup();
  myButton.Setup();
- ShowLogo(); 
+ ShowLogo();
 }
 
 // MAIN LOOP
@@ -38,14 +38,14 @@ void setup() {
 void loop(){
   myButton.Update();
   myLED.Update();
-  
+
   // don't do anything until state changes
   if (myButton.state_flag != mode_counter){
     myLED.ShowColor(myButton.state_flag);
     mode_counter = myButton.state_flag;
     ShowMode(mode_counter);}
    }
-   
+
 // END MAIN LOOP
 
 void ShowLogo(){
@@ -71,6 +71,3 @@ void ShowMode(int mode_counter){
   if (mode_counter==6)les_screen.println("VIOLET");
   les_screen.display();
 }
-
-
- 
