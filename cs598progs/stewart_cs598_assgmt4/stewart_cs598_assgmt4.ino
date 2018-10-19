@@ -7,7 +7,7 @@ const int latch_pin = 13;
 
 void setup() {
   // put your setup code here, to run once:
-  Serial.begin(9600);
+ 
 pinMode(data_pin, OUTPUT);
 pinMode(clock_pin, OUTPUT);
 pinMode(latch_pin, OUTPUT);
@@ -25,7 +25,7 @@ void loop() {
   byte z = B00000001;
     for ( int t = 0; t < 8; t++ ) {
     shiftDisplay(z);
-    Serial.println(z);
+ 
     z = z << 1;
     delay(40);
   }
