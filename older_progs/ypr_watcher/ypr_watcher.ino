@@ -18,9 +18,9 @@
 MPU6050 mpu;
 //MPU6050 mpu(0x69); // <-- use for AD0 high
 
-#define RED_PIN 3 
-#define GREEN_PIN 4
-#define BLUE_PIN 5
+#define RED_PIN 5
+#define GREEN_PIN 9
+#define BLUE_PIN 3
 #define OFF_PIN 13
 
 
