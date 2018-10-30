@@ -3,7 +3,7 @@
 
 //Variables
 les_rgb_led myLED(100);
-les_button myButton(150);
+les_button myButton(150, 7);
 
 void setup() {
  myLED.Setup();
