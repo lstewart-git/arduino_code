@@ -16,17 +16,8 @@
 // AD0 high = 0x69
 
 MPU6050 mpu;
-//MPU6050 mpu(0x69); // <-- use for AD0 high
-
-//#define OUTPUT_READABLE_QUATERNION
-
-//#define OUTPUT_READABLE_EULER
 
 #define OUTPUT_READABLE_YAWPITCHROLL
-
-//#define OUTPUT_READABLE_REALACCEL
-
-//#define OUTPUT_READABLE_WORLDACCEL
 
 #define GREEN_PIN 3 // (Arduino is 13, Teensy is 11, Teensy++ is 6)
 bool blinkState = false;
@@ -78,12 +69,6 @@ void setup() {
     // really up to you depending on your project)
     Serial.begin(19200);
     while (!Serial); // wait for Leonardo enumeration, others continue immediately
-
-    // NOTE: 8MHz or slower host processors, like the Teensy @ 3.3v or Ardunio
-    // Pro Mini running at 3.3v, cannot handle this baud rate reliably due to
-    // the baud timing being too misaligned with processor ticks. You must use
-    // 38400 or slower in these cases, or use some kind of external separate
-    // crystal solution for the UART timer.
 
     // initialize device
     Serial.println(F("Initializing I2C devices..."));
