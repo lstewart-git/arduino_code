@@ -1,3 +1,14 @@
+// CS 598 Assignment #5
+// by Lawrence Stewart
+// Due November 08, 2018
+
+// This program controls a pair of LEDs via a
+// button and a potentiometer. The LEDs can 
+// transit through 4 states via the button:
+// Both Off, Green on Blue off,
+// Blue on Green off, or alternating with frequency
+// dictated by the potentiometer. The 32x128 OLED
+// display will display the system's current state.
 
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
@@ -33,22 +44,26 @@ void loop()
 {
   myPot.Update();
   myButton.Update();
-  myLED.Update();
+  myLED.SetFlipTime(myPot.pot_value);  // send a new flip flop timer value to the LED
+  myLED.Update(); 
+  
+  // only call updateState when button has been pressed
+  // this greatly speeds up the loop
   if (myButton.state_flag != state_change){
     state_change = myButton.state_flag;
-    displayData();
+    updateState();
     }
   
  } // ////////////////  END MAIN PROGRAM LOOP
 
 
-void displayData(){
+void updateState(){
     les_screen.clearDisplay();
     les_screen.setCursor(10,10);
     les_screen.setTextSize(2);
 
       if (myButton.state_flag == 1){
-      myLED.FlipOff();
+      myLED.FlipOff(); // no longer in flipflop state
       myLED.SetColor(0, 0, 0);
       myLED.SetOn();
       les_screen.println("Off");
@@ -72,7 +87,7 @@ void displayData(){
     }
 
     les_screen.display();
-}
+} // END updateState
 
 void show_logo(){
   les_screen.clearDisplay();
