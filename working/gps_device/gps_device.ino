@@ -25,15 +25,25 @@ TinyGPSPlus gps;
 
 //instantiate a software serial object
 SoftwareSerial ss(RXPin, TXPin);
-
+static const int buzz_pin = 8;
 void setup()
 {
+  // for buzzer
+  pinMode(buzz_pin, OUTPUT);
+      tone(buzz_pin, 440);
+  delay(500);
+  noTone(buzz_pin);
+  tone(buzz_pin, 880);
+  delay(500);
+  noTone(buzz_pin);
+  
   ss.begin(GPSBaud);
   les_screen.begin(SSD1306_SWITCHCAPVCC, 0x3C);
   myLED.Setup();
   myButton.Setup();
   myPot.Setup();
   show_logo();
+
 }
 //   ///////////////// MAIN PROGRAM LOOP
 void loop()
@@ -56,7 +66,6 @@ void displayDistance()
     les_screen.clearDisplay();
     les_screen.setCursor(0,0);
     les_screen.setTextSize(1);
-
    
           double distanceToHome =
         TinyGPSPlus::distanceBetween(
@@ -71,10 +80,21 @@ void displayDistance()
           gps.location.lng(),
           HOME_LAT, 
           HOME_LON);
-          
-    les_screen.println("Distance to Home:");
-    les_screen.print(distanceToHome/1000, 2);
-    les_screen.println("  km");
+  
+    double distanceMiles = distanceToHome / 1609.344;
+      
+    if (distanceToHome < 200 ){     
+      les_screen.println("Distance to Home:");
+      les_screen.print(distanceToHome, 0);
+      les_screen.println(" meters");
+    }
+    else{
+      les_screen.println("Distance to Home:");
+      les_screen.print(distanceToHome / 1609.344, 2);
+      les_screen.println(" miles"); 
+    }
+    
+    
     les_screen.print("Course: ");      
     les_screen.println(courseToHome, 1);
     les_screen.display();
@@ -91,9 +111,8 @@ void displayLocation()
     les_screen.println(gps.location.lat(),3);
     les_screen.print("Long: ");
     les_screen.println(gps.location.lng(), 3);
-   // les_screen.setTextSize(2);
-   // les_screen.println(gps.speed.kmph(), 2);
     les_screen.display();
+    
 } // END displayLocation() FUNCTION
 
 void displaySpeed()
@@ -119,5 +138,8 @@ void show_logo(){
   les_screen.println("   Press Button");
   les_screen.println("     to Begin");
   les_screen.display();
+  // play a tune
+
+ 
 }
 // END PROGRAM
