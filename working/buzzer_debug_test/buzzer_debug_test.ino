@@ -1,3 +1,27 @@
+
+// Arduino Connection Layout:
+// digital pin 0 : 
+// digital pin 1 : 
+// digital pin 2 : Button 1
+// digital pin 3 : led blue
+// digital pin 4 : Buzzer
+// digital pin 5 : led red
+// digital pin 6 : Tx Software Serial GPS
+// digital pin 7 : Rx Software Serial GPS
+// digital pin 8 : 
+// digital pin 9 : led green
+// digital pin 10 : SPI sd card reader
+// digital pin 11 : SPI sd card reader
+// digital pin 12 : SPI sd card reader
+// digital pin 13 : SPI sd card reader
+// analog pin 0 : potentiometer
+// analog pin 1 :
+// analog pin 2 :
+// analog pin 3 :
+// analog pin 4 : I2C SDA oled display
+// analog pin 5 : I2C SCL oled display
+
+
 #include <TinyGPS++.h>
 #include <SoftwareSerial.h>
 #include <SPI.h>
@@ -18,7 +42,7 @@ les_pot myPot(69);
 Adafruit_SSD1306 les_screen(OLED_RESET);
 
 
-static const int buzz_pin = 8;
+static const int buzz_pin = 4;
 void setup()
 {
   // for buzzer

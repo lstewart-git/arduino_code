@@ -1,3 +1,30 @@
+// Software for a prototype GPS device
+// An Arduino Experiment
+// by Lawrence Stewart
+
+// Arduino Connection Layout:
+// digital pin 0 : 
+// digital pin 1 : 
+// digital pin 2 : Button 1
+// digital pin 3 : led blue
+// digital pin 4 : Buzzer
+// digital pin 5 : led red
+// digital pin 6 : Tx Software Serial GPS
+// digital pin 7 : Rx Software Serial GPS
+// digital pin 8 : 
+// digital pin 9 : led green
+// digital pin 10 : SPI sd card reader
+// digital pin 11 : SPI sd card reader
+// digital pin 12 : SPI sd card reader
+// digital pin 13 : SPI sd card reader
+// analog pin 0 : potentiometer
+// analog pin 1 :
+// analog pin 2 :
+// analog pin 3 :
+// analog pin 4 : I2C SDA oled display
+// analog pin 5 : I2C SCL oled display
+
+// LIBRARIES
 #include <TinyGPS++.h>
 #include <SoftwareSerial.h>
 #include <SPI.h>
@@ -10,40 +37,39 @@
 
 //instantiate breadboard objects
 les_rgb_led myLED(100);
-les_button myButton(350, 4);
+les_button myButton(350, 5);
 les_pot myPot(69);
 
-//instantiate an oled_display object
+//oled_display object
 #define OLED_RESET 12
 Adafruit_SSD1306 les_screen(OLED_RESET);
 
-//instantiate a gps object
+//gps object
 static const int RXPin = 7, TXPin = 6;
 static const uint32_t GPSBaud = 9600;
 static const double HOME_LAT = 39.454233, HOME_LON = -77.384811; 
 TinyGPSPlus gps;
 
-//instantiate a software serial object
+//software serial object
 SoftwareSerial ss(RXPin, TXPin);
-static const int buzz_pin = 8;
+
+// program logic variables
+double max_distance = 0.0;
+float max_speed = 0.0;
+double distanceToHome = 0.0;
+float cur_speed = 0.0;
+double distanceMiles = 0.0;
+
+
+//  /////////////  SETUP  ////////////////////
 void setup()
 {
-  // for buzzer
-  pinMode(buzz_pin, OUTPUT);
-      tone(buzz_pin, 440);
-  delay(500);
-  noTone(buzz_pin);
-  tone(buzz_pin, 880);
-  delay(500);
-  noTone(buzz_pin);
-  
   ss.begin(GPSBaud);
   les_screen.begin(SSD1306_SWITCHCAPVCC, 0x3C);
   myLED.Setup();
   myButton.Setup();
   myPot.Setup();
   show_logo();
-
 }
 //   ///////////////// MAIN PROGRAM LOOP
 void loop()
@@ -51,9 +77,25 @@ void loop()
   while (ss.available() > 0)
 	  
     if (gps.encode(ss.read())){
+      
+        distanceToHome = TinyGPSPlus::distanceBetween(
+          gps.location.lat(),
+          gps.location.lng(),
+          HOME_LAT, 
+          HOME_LON);
+          
+       distanceMiles = distanceToHome / 1609.344;
+       // check for new max distance
+       if (distanceMiles > max_distance) max_distance = distanceMiles;
+
+       cur_speed = gps.speed.kmph();
+       // check for new high speed
+       if (cur_speed > max_speed) max_speed = cur_speed;
+         
       if (gps.location.isValid() && myButton.state_flag == 1) displayLocation();
       if (gps.location.isValid() && myButton.state_flag == 2) displayDistance();
       if (gps.location.isValid() && myButton.state_flag == 3) displaySpeed();
+      if (gps.location.isValid() && myButton.state_flag == 4) displayMax();
 	      }
 
   myButton.Update();
@@ -66,13 +108,6 @@ void displayDistance()
     les_screen.clearDisplay();
     les_screen.setCursor(0,0);
     les_screen.setTextSize(1);
-   
-          double distanceToHome =
-        TinyGPSPlus::distanceBetween(
-          gps.location.lat(),
-          gps.location.lng(),
-          HOME_LAT, 
-          HOME_LON);
           
         double courseToHome =
         TinyGPSPlus::courseTo(
@@ -81,8 +116,7 @@ void displayDistance()
           HOME_LAT, 
           HOME_LON);
   
-    double distanceMiles = distanceToHome / 1609.344;
-      
+
     if (distanceToHome < 200 ){     
       les_screen.println("Distance to Home:");
       les_screen.print(distanceToHome, 0);
@@ -93,8 +127,7 @@ void displayDistance()
       les_screen.print(distanceToHome / 1609.344, 2);
       les_screen.println(" miles"); 
     }
-    
-    
+      
     les_screen.print("Course: ");      
     les_screen.println(courseToHome, 1);
     les_screen.display();
@@ -122,10 +155,24 @@ void displaySpeed()
     les_screen.setTextSize(1);
     les_screen.println("Speed:");
     les_screen.setTextSize(2);
-    les_screen.print(gps.speed.kmph(), 2);
+    les_screen.print(cur_speed, 2);
     les_screen.print(" kph");
     les_screen.display();
 } // END displaySpeed() FUNCTION
+
+void displayMax()
+{
+    les_screen.clearDisplay();
+    les_screen.setCursor(0,0);
+    les_screen.setTextSize(1);
+    les_screen.print("Max Speed:");
+    les_screen.print(max_speed, 2);
+    les_screen.println(" kph");
+    les_screen.print("Max Distance:");
+    les_screen.print(max_distance, 2);
+    les_screen.println(" mi");
+    les_screen.display();
+} // END displayMax() FUNCTION
 
 
 void show_logo(){
