@@ -54,12 +54,11 @@ TinyGPSPlus gps;
 SoftwareSerial ss(RXPin, TXPin);
 
 // program logic variables
+double distanceToHome = 0.0;
+double distanceMiles = 0.0;
 double max_distance = 0.0;
 float max_speed = 0.0;
-double distanceToHome = 0.0;
 float cur_speed = 0.0;
-double distanceMiles = 0.0;
-
 
 //  /////////////  SETUP  ////////////////////
 void setup()
