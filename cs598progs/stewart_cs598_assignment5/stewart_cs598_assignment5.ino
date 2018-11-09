@@ -83,7 +83,7 @@ void updateState(){
       if (myButton.state_flag == 4){
       myLED.SetColor(0, 0, 0);
       myLED.FlipOn();
-      les_screen.println("Alternate");
+     les_screen.println("Alternate");
     }
 
     les_screen.display();

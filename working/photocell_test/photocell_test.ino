@@ -30,8 +30,14 @@
 
 //instantiate breadboard objects
 les_rgb_led myLED(100);
-les_button myButton(350, 5);
+les_button myButton(350, 4);
 les_pot myPot(69);
+
+const int light_pin = A1;
+int light_val = 0;
+int maxval = 0;
+int minval = 1024;
+int light_on = 800;
 
 //instantiate an oled_display object
 #define OLED_RESET 12
@@ -54,11 +60,20 @@ void setup()
 //   ///////////////// MAIN PROGRAM LOOP
 void loop()
 {
+      light_val = analogRead(light_pin);
+      if (light_val > maxval) maxval = light_val;
+      if (light_val < minval) minval = light_val;
+      if (light_val < light_on){
+        int intensity = 800;
+        if (light_val > 255) intensity = 255;
+        myLED.SetColor(intensity, intensity, intensity);
 
-      if ( myButton.state_flag == 1) tone1();
-      if ( myButton.state_flag == 2) tone2();
-      if ( myButton.state_flag == 3) tone3();
-      if ( myButton.state_flag == 4) tone4();
+        
+        myLED.SetOn();
+      }
+      else myLED.SetOff();
+      if ( myButton.state_flag == 1) tone3();
+      if ( myButton.state_flag == 2) tone4();
 	
 
   myButton.Update();
@@ -66,36 +81,19 @@ void loop()
        
  } // ////////////////  END MAIN PROGRAM LOOP
 
-void tone1()
-{
-    les_screen.clearDisplay();
-    les_screen.setCursor(0,0);
-    les_screen.setTextSize(1);
-    les_screen.println("Tone 1:");
-    les_screen.display();
-    play_tone1(440, 880);
-} // END displayDistance() FUNCTION
-
-
-void tone2()
-{
-    les_screen.clearDisplay();
-    les_screen.setCursor(0,0);
-    les_screen.setTextSize(1);
-    les_screen.println("Tone2: ");
-    les_screen.display();
-    play_tone1(50, 1500);
-    
-} // END displayLocation() FUNCTION
-
 void tone3()
 {
     les_screen.clearDisplay();
     les_screen.setCursor(0,0);
     les_screen.setTextSize(1);
-    les_screen.println("Tone3:");
+    les_screen.print("max: ");
+    les_screen.print(maxval);
+    les_screen.print("  min: ");
+    les_screen.println(minval);
+    les_screen.setTextSize(2);
+    les_screen.println(light_val);
     les_screen.display();
-    play_tone1(200, 6000);
+ //   play_tone1(200, 6000);
 } // END displaySpeed() FUNCTION
 
 void tone4()
