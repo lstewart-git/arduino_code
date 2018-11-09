@@ -1,19 +1,9 @@
-// CS 598 Homwework part B
+// CS 598 Homwework part C
 // by Lawrence Stewart
 // Due November 15, 2018
 
-// This program controls an rgb LED to
-// simulate a night light. It reads a
-// potentiometer to set a minimum light
-// level for the light to come on, then
-// adjusts brightness as the ambient light dims.
-// the program detects 5 discrete light levels
-// and changes color to indicate which level
-// is current. The program has three 'modes'
-// controlled by a button: startup, which displays
-// a splash screen, mode 1 which displays the 
-// sensor readings and parameters, and mode 2,
-// which turns off the readings and light
+// This program uses 2 photocells (my total supply)
+// to control the color of an rgb led
 
 // Arduino (Red Box) Connection Layout:
 // digital pin 0 : 
@@ -31,8 +21,8 @@
 // digital pin 12 :
 // digital pin 13 :
 // analog pin 0 : potentiometer
-// analog pin 1 :
-// analog pin 2 :
+// analog pin 1 : photoresistor 1
+// analog pin 2 : photoresistor 2
 // analog pin 3 :
 // analog pin 4 : I2C SDA oled display
 // analog pin 5 : I2C SCL oled display
@@ -43,14 +33,13 @@
 #include <les_rgb_led.h>
 #include <les_button.h>
 #include <les_pot.h>
+#include <les_photoresistor.h>
 
 //instantiate breadboard objects
 les_rgb_led myLED(100);
 les_button myButton(350, 4);
 les_pot myPot(69);
-
-// light sensor pin
-const int light_pin = A1;
+les_photoresistor my_cds_1(A1);
 
 // program control variables
 int light_val = 0;
@@ -71,6 +60,7 @@ void setup()
   myLED.Setup();
   myButton.Setup();
   myPot.Setup();
+  my_cds_1.Setup();
   show_logo();
 }
 
@@ -80,7 +70,7 @@ void loop()
       if (myButton.state_flag == 1){
         
         // get light sensor value
-        light_val = analogRead(light_pin);
+        light_val = my_cds_1.photoresistor_value;
 
         // get potentiometer value
         potreading = myPot.pot_value;
@@ -116,6 +106,7 @@ void loop()
       myButton.Update();
       myLED.Update();
       myPot.Update();
+      my_cds_1.Update();
        
  } // ////////////////  END MAIN PROGRAM LOOP
 
