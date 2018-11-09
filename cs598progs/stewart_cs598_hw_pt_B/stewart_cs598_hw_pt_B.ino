@@ -51,7 +51,9 @@ const int light_pin = A1;
 int light_val = 0;
 int maxval = 0;
 int minval = 1024;
-int light_on = 800;
+int light_on = 1024;
+int intensity = 0;
+int potreading = 0;
 
 //instantiate an oled_display object
 #define OLED_RESET 12
@@ -71,22 +73,30 @@ void loop()
 
       
       if (myButton.state_flag == 1){
+        
         // get light sensor value
         light_val = analogRead(light_pin);
-      
+
+        // get potentiometer value
+        potreading = myPot.pot_value;
+
+        // set cutoff value from pot input
+        light_on = potreading;
+        
         if (light_val > maxval) maxval = light_val;
         if (light_val < minval) minval = light_val;
 
         //turn on light at calculated intensity
         if (light_val < light_on){
-          int intensity = 355 - light_val;
-          if (intensity  <1) intensity = 0;
+          set_intensity();
           myLED.SetColor(intensity, 0, intensity);
           myLED.SetOn();
+          mode1();
           }
-
+      }
         //turn off light
-        else myLED.SetOff();
+        else {myLED.SetOff();
+          intensity = 0;
           mode1();
           }
           
@@ -111,9 +121,13 @@ void mode1()
     les_screen.print("  min: ");
     les_screen.println(minval);
     les_screen.setTextSize(2);
+    les_screen.print("lux: ");
     les_screen.println(light_val);
     les_screen.setTextSize(1);
-    les_screen.println(myPot.pot_value);
+    les_screen.print("cut-in:");
+    les_screen.print(potreading);
+    les_screen.print(" level:");
+    les_screen.println(intensity);
     les_screen.display();
 
 } // END mode1() FUNCTION
@@ -140,5 +154,15 @@ void show_logo(){
   les_screen.display();
 }
 
+void set_intensity(){
+          // do a linear interpolation from ambient light range to brightness range
+         // map(intensity, , potreading, 0, 255);
+          intensity = map(light_val, minval, potreading, 0, 255);
+          intensity = 255 - intensity;
+          }
+
+void read_sensors(){
+  
+}
 
 // END PROGRAM
