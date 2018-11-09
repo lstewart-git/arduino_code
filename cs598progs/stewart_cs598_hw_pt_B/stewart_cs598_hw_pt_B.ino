@@ -1,3 +1,14 @@
+// CS 598 Homwework part B
+// by Lawrence Stewart
+// Due November 15, 2018
+
+// This program controls a pair of LEDs via a
+// button and a potentiometer. The LEDs can 
+// transit through 4 states via the button:
+// Both Off, Green on Blue off,
+// Blue on Green off, or alternating with frequency
+// dictated by the potentiometer. The 32x128 OLED
+// display will display the system's current state.
 
 // Arduino Connection Layout:
 // digital pin 0 : 
@@ -33,7 +44,10 @@ les_rgb_led myLED(100);
 les_button myButton(350, 4);
 les_pot myPot(69);
 
+// light sensor pin
 const int light_pin = A1;
+
+// program control variables
 int light_val = 0;
 int maxval = 0;
 int minval = 1024;
@@ -43,45 +57,51 @@ int light_on = 800;
 #define OLED_RESET 12
 Adafruit_SSD1306 les_screen(OLED_RESET);
 
-
-static const int buzz_pin = 4;
 void setup()
 {
-  // for buzzer
-  pinMode(buzz_pin, OUTPUT);
- les_screen.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+  les_screen.begin(SSD1306_SWITCHCAPVCC, 0x3C);
   myLED.Setup();
- myButton.Setup();
+  myButton.Setup();
   myPot.Setup();
   show_logo();
-
-
 }
 //   ///////////////// MAIN PROGRAM LOOP
 void loop()
 {
-      light_val = analogRead(light_pin);
-      if (light_val > maxval) maxval = light_val;
-      if (light_val < minval) minval = light_val;
-      if (light_val < light_on){
-        int intensity = 355 - light_val;
-        if (intensity  <1) intensity = 0;
-        myLED.SetColor(intensity, 0, intensity);
 
-        
-        myLED.SetOn();
+      
+      if (myButton.state_flag == 1){
+        // get light sensor value
+        light_val = analogRead(light_pin);
+      
+        if (light_val > maxval) maxval = light_val;
+        if (light_val < minval) minval = light_val;
+
+        //turn on light at calculated intensity
+        if (light_val < light_on){
+          int intensity = 355 - light_val;
+          if (intensity  <1) intensity = 0;
+          myLED.SetColor(intensity, 0, intensity);
+          myLED.SetOn();
+          }
+
+        //turn off light
+        else myLED.SetOff();
+          mode1();
+          }
+          
+      if (myButton.state_flag == 2){
+        myLED.SetOff();
+        mode2();
       }
-      else myLED.SetOff();
-      if ( myButton.state_flag == 1) tone3();
-      if ( myButton.state_flag == 2) tone4();
-	
-
-  myButton.Update();
-  myLED.Update();
+      
+      myButton.Update();
+      myLED.Update();
+      myPot.Update();
        
  } // ////////////////  END MAIN PROGRAM LOOP
 
-void tone3()
+void mode1()
 {
     les_screen.clearDisplay();
     les_screen.setCursor(0,0);
@@ -92,11 +112,13 @@ void tone3()
     les_screen.println(minval);
     les_screen.setTextSize(2);
     les_screen.println(light_val);
+    les_screen.setTextSize(1);
+    les_screen.println(myPot.pot_value);
     les_screen.display();
- //   play_tone1(200, 6000);
-} // END displaySpeed() FUNCTION
 
-void tone4()
+} // END mode1() FUNCTION
+
+void mode2()
 {
     les_screen.clearDisplay();
     les_screen.setCursor(0,0);
@@ -111,23 +133,12 @@ void show_logo(){
   les_screen.setTextSize(1);
   les_screen.setTextColor(WHITE);
   les_screen.setCursor(0,0);
-  les_screen.println("Tone Test");
+  les_screen.println("Homework Pt B");
   les_screen.println("By Lawrence Stewart");
   les_screen.println("   Press Button");
   les_screen.println("     to Begin");
   les_screen.display();
 }
 
-void play_tone1(int hz1, int hz2){
-  tone(buzz_pin, hz1);
-  delay(500);
-  noTone(buzz_pin);
-  tone(buzz_pin, hz2);
-  delay(500);
-  noTone(buzz_pin);}
 
-  void play_tone2(int hz1, int hz2){
-  tone(buzz_pin, hz1, 500);
-  tone(buzz_pin, hz2, 500);
-  }
 // END PROGRAM
