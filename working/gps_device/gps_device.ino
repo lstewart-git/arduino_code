@@ -40,6 +40,8 @@ les_rgb_led myLED(100);
 les_button myButton(350, 5);
 les_pot myPot(69);
 
+static const int buzz_pin = 4;
+
 //oled_display object
 #define OLED_RESET 12
 Adafruit_SSD1306 les_screen(OLED_RESET);
@@ -68,7 +70,9 @@ void setup()
   myLED.Setup();
   myButton.Setup();
   myPot.Setup();
+  pinMode(buzz_pin, OUTPUT);
   show_logo();
+  play_tone1(2000, 4000);
 }
 //   ///////////////// MAIN PROGRAM LOOP
 void loop()
@@ -91,10 +95,10 @@ void loop()
        // check for new high speed
        if (cur_speed > max_speed) max_speed = cur_speed;
          
-      if (gps.location.isValid() && myButton.state_flag == 1) displayLocation();
-      if (gps.location.isValid() && myButton.state_flag == 2) displayDistance();
-      if (gps.location.isValid() && myButton.state_flag == 3) displaySpeed();
-      if (gps.location.isValid() && myButton.state_flag == 4) displayMax();
+      if (myButton.state_flag == 1) displayLocation();
+      if (myButton.state_flag == 2) displayDistance();
+      if (myButton.state_flag == 3) displaySpeed();
+      if (myButton.state_flag == 4) displayMax();
 	      }
 
   myButton.Update();
@@ -188,4 +192,13 @@ void show_logo(){
 
  
 }
+
+void play_tone1(int hz1, int hz2){
+  tone(buzz_pin, hz1);
+  delay(500);
+  noTone(buzz_pin);
+  tone(buzz_pin, hz2);
+  delay(500);
+  noTone(buzz_pin);}
+  
 // END PROGRAM
