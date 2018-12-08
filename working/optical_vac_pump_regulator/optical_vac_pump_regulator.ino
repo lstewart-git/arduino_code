@@ -39,8 +39,10 @@ void displaySensorDetails(void)
 
 void setup(void) 
 {
+  digitalWrite(LED_BUILTIN, LOW);
   Serial.begin(9600);
   pinMode(3, OUTPUT);
+  pinMode(4, OUTPUT);
   Serial.println("Pressure Sensor Test"); Serial.println("");
   
   /* Initialise the sensor */
@@ -59,9 +61,7 @@ void loop(void)
   sensors_event_t event;
   bmp.getEvent(&event);
  
- digitalWrite(3, HIGH);
- delay(1000);
- digitalWrite(3, LOW);
+
   if (event.pressure)
   {
 
@@ -74,20 +74,20 @@ void loop(void)
 
     float temperature;
     bmp.getTemperature(&temperature);
+    
+    if(event.pressure > 800) digitalWrite(3, LOW);
+    if(event.pressure < 800) digitalWrite(3, HIGH);
+    if(event.pressure > 600) digitalWrite(4, LOW);
+    if(event.pressure < 600) digitalWrite(4, HIGH);
+    
     Serial.print("Temperature: ");
     Serial.print(temperature);
     Serial.println(" C");
-
-    float seaLevelPressure = SENSORS_PRESSURE_SEALEVELHPA;
-    Serial.print("Altitude:    "); 
-    Serial.print(bmp.pressureToAltitude(seaLevelPressure,
-                                        event.pressure)); 
-    Serial.println(" m");
-    Serial.println("");
   }
+  
   else
   {
     Serial.println("Sensor error");
   }
-  delay(3000);
+  delay(100);
 }
