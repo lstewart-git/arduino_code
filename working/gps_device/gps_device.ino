@@ -1,4 +1,4 @@
-// Software for a prototype GPS device
+ // Software for a prototype GPS device
 // An Arduino Experiment
 // by Lawrence Stewart
 

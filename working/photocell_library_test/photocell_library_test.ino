@@ -70,11 +70,13 @@ void loop()
         int intensity = 355 - light_val;
         if (intensity  <1) intensity = 0;
         myLED.SetColor(intensity, 0, intensity);
+
+        
         myLED.SetOn();
       }
       else myLED.SetOff();
-      if ( myButton.state_flag == 1) display_mode1();
-      if ( myButton.state_flag == 2) display_mode_off();
+      if ( myButton.state_flag == 1) tone3();
+      if ( myButton.state_flag == 2) tone4();
 	
 
   myButton.Update();
@@ -83,7 +85,7 @@ void loop()
        
  } // ////////////////  END MAIN PROGRAM LOOP
 
-void display_mode1()
+void tone3()
 {
     les_screen.clearDisplay();
     les_screen.setCursor(0,0);
@@ -95,9 +97,10 @@ void display_mode1()
     les_screen.setTextSize(2);
     les_screen.println(light_val);
     les_screen.display();
-} 
+ //   play_tone1(200, 6000);
+} // END displaySpeed() FUNCTION
 
-void display_mode_off()
+void tone4()
 {
     les_screen.clearDisplay();
     les_screen.setCursor(0,0);
@@ -119,5 +122,16 @@ void show_logo(){
   les_screen.display();
 }
 
+void play_tone1(int hz1, int hz2){
+  tone(buzz_pin, hz1);
+  delay(500);
+  noTone(buzz_pin);
+  tone(buzz_pin, hz2);
+  delay(500);
+  noTone(buzz_pin);}
 
+  void play_tone2(int hz1, int hz2){
+  tone(buzz_pin, hz1, 500);
+  tone(buzz_pin, hz2, 500);
+  }
 // END PROGRAM
