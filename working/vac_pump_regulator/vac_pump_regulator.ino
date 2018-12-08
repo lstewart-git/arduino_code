@@ -46,11 +46,11 @@ int light_on = 800;
 Adafruit_SSD1306 les_screen(OLED_RESET);
 
 
-static const int buzz_pin = 4;
+static const int relay_pin = 12;
 void setup()
 {
   // for buzzer
-  pinMode(buzz_pin, OUTPUT);
+  pinMode(relay_pin, OUTPUT);
  les_screen.begin(SSD1306_SWITCHCAPVCC, 0x3C);
   myLED.Setup();
  myButton.Setup();
@@ -66,13 +66,19 @@ void loop()
       light_val = myCDS.photoresistor_value;
       if (light_val > maxval) maxval = light_val;
       if (light_val < minval) minval = light_val;
+      
+      // light is off inside
       if (light_val < light_on){
-        int intensity = 355 - light_val;
-        if (intensity  <1) intensity = 0;
-        myLED.SetColor(intensity, 0, intensity);
+       myLED.SetOff();
+      }
+      
+      // light is on inside
+      else {
+        myLED.SetColor(255, 0, 255);
         myLED.SetOn();
       }
-      else myLED.SetOff();
+
+      // pick a screen to display
       if ( myButton.state_flag == 1) display_mode1();
       if ( myButton.state_flag == 2) display_mode_off();
 	
