@@ -65,24 +65,12 @@ void loop(void)
   if (event.pressure)
   {
 
-    Serial.print("Pressure:    ");
-    Serial.print(event.pressure);
-    Serial.println(" hPa");
-    if (event.pressure < min_press) min_press = event.pressure;
-    Serial.println(min_press);
-    
-
-    float temperature;
-    bmp.getTemperature(&temperature);
     
     if(event.pressure > 800) digitalWrite(3, LOW);
     if(event.pressure < 800) digitalWrite(3, HIGH);
     if(event.pressure > 600) digitalWrite(4, LOW);
     if(event.pressure < 600) digitalWrite(4, HIGH);
     
-    Serial.print("Temperature: ");
-    Serial.print(temperature);
-    Serial.println(" C");
   }
   
   else

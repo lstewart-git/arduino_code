@@ -51,6 +51,7 @@ void setup()
 {
   // for buzzer
   pinMode(relay_pin, OUTPUT);
+  digitalWrite(relay_pin, LOW);
  les_screen.begin(SSD1306_SWITCHCAPVCC, 0x3C);
   myLED.Setup();
  myButton.Setup();
@@ -63,21 +64,28 @@ void setup()
 //   ///////////////// MAIN PROGRAM LOOP
 void loop()
 {
+
+       if ( myButton.state_flag == 0) digitalWrite(relay_pin, LOW);
       light_val = myCDS.photoresistor_value;
       if (light_val > maxval) maxval = light_val;
       if (light_val < minval) minval = light_val;
+
+      if ( myButton.state_flag == 1){
+   
+        // light is off inside
+        if (light_val < light_on){
+         myLED.SetOff();
+         digitalWrite(relay_pin, LOW); // turn off pump
+         }
       
-      // light is off inside
-      if (light_val < light_on){
-       myLED.SetOff();
-      }
-      
-      // light is on inside
-      else {
+        // light is on inside
+        else {
         myLED.SetColor(255, 0, 255);
         myLED.SetOn();
-      }
+        digitalWrite(relay_pin, HIGH); // turn on pump
+        }
 
+     } // end mode 1 check
       // pick a screen to display
       if ( myButton.state_flag == 1) display_mode1();
       if ( myButton.state_flag == 2) display_mode_off();
@@ -118,7 +126,7 @@ void show_logo(){
   les_screen.setTextSize(1);
   les_screen.setTextColor(WHITE);
   les_screen.setCursor(0,0);
-  les_screen.println("Tone Test");
+  les_screen.println("Pump Regulator");
   les_screen.println("By Lawrence Stewart");
   les_screen.println("   Press Button");
   les_screen.println("     to Begin");
