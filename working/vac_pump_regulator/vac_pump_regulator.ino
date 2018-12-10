@@ -10,12 +10,12 @@
 // digital pin 7 : Rx Software Serial GPS
 // digital pin 8 : 
 // digital pin 9 : led green
-// digital pin 10 : SPI sd card reader
-// digital pin 11 : SPI sd card reader
-// digital pin 12 : SPI sd card reader
-// digital pin 13 : SPI sd card reader
+// digital pin 10 : 
+// digital pin 11 : 
+// digital pin 12 : pump power relay
+// digital pin 13 : 
 // analog pin 0 : potentiometer
-// analog pin 1 :
+// analog pin 1 : cds photocell
 // analog pin 2 :
 // analog pin 3 :
 // analog pin 4 : I2C SDA oled display
@@ -35,26 +35,26 @@ les_button myButton(350, 4);
 les_pot myPot(69);
 les_photoresistor myCDS(A1);
 
-const int light_pin = A1;
-int light_val = 0;
+const int light_pin = A1;  // cds
+static const int relay_pin = 12; // pump power relay
+int light_val = 0;         // current cds reading
 int maxval = 0;
 int minval = 1024;
-int light_on = 800;
+int trigger_level = 800;   // detect a light on event at this level
+int total_pump_cycles = 0;
 
 //instantiate an oled_display object
 #define OLED_RESET 12
 Adafruit_SSD1306 les_screen(OLED_RESET);
 
-
-static const int relay_pin = 12;
+//   ////////////    SETUP     ///////////////////
 void setup()
 {
-  // for buzzer
   pinMode(relay_pin, OUTPUT);
   digitalWrite(relay_pin, LOW);
- les_screen.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+  les_screen.begin(SSD1306_SWITCHCAPVCC, 0x3C);
   myLED.Setup();
- myButton.Setup();
+  myButton.Setup();
   myPot.Setup();
   myCDS.Setup();
   show_logo();
@@ -64,16 +64,27 @@ void setup()
 //   ///////////////// MAIN PROGRAM LOOP
 void loop()
 {
+      // make sure relay off in startup mode
+      if ( myButton.state_flag == 0) digitalWrite(relay_pin, LOW);
 
-       if ( myButton.state_flag == 0) digitalWrite(relay_pin, LOW);
+      // update and read all components
       light_val = myCDS.photoresistor_value;
+      myButton.Update();
+      myLED.Update();
+      myCDS.Update();
+      myPot.Update();
+      // set trigger from pot reading
+      trigger_level = myPot.pot_value;
+
+      // keep track of light vals
       if (light_val > maxval) maxval = light_val;
       if (light_val < minval) minval = light_val;
 
+      // check for operational mode:
       if ( myButton.state_flag == 1){
    
         // light is off inside
-        if (light_val < light_on){
+        if (light_val < trigger_level){
          myLED.SetOff();
          digitalWrite(relay_pin, LOW); // turn off pump
          }
@@ -85,7 +96,9 @@ void loop()
         digitalWrite(relay_pin, HIGH); // turn on pump
         }
 
-     } // end mode 1 check
+     } // end operational mode check
+
+     
       // pick a screen to display
       if ( myButton.state_flag == 1) display_mode1();
       if ( myButton.state_flag == 2) display_mode_off();
@@ -94,6 +107,8 @@ void loop()
   myButton.Update();
   myLED.Update();
   myCDS.Update();
+  myPot.Update();
+  trigger_level = myPot.pot_value;
        
  } // ////////////////  END MAIN PROGRAM LOOP
 
