@@ -1,6 +1,7 @@
 #include <Wire.h>
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BMP085_U.h>
+#include "LowPower.h"
 
 /*    You should also assign a unique ID to this sensor for use with
    the Adafruit Sensor API so that you can identify this particular
@@ -60,9 +61,18 @@ void loop(void)
       pump_on = 0; // we're turning pump off
       digitalWrite(3, LOW);  // led off
       digitalWrite(4, LOW);  // led off
+      // Go to low power sleep for 2 sec
+      LowPower.powerDown(SLEEP_2S, ADC_OFF, BOD_OFF);
       }
 
-  }
+    if (!pump_on && event.pressure < 800) {   // Pump is off, press low
+      // Go to low power sleep for 2 sec
+      LowPower.powerDown(SLEEP_2S, ADC_OFF, BOD_OFF);
+      }
+      
+    } // END event.pressure
+
+  } // END LOOOP
   
   else
   {
