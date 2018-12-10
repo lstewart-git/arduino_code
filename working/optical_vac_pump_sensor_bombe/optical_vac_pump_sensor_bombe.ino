@@ -61,8 +61,6 @@ void loop(void)
       pump_on = 0; // we're turning pump off
       digitalWrite(3, LOW);  // led off
       digitalWrite(4, LOW);  // led off
-      // Go to low power sleep for 2 sec
-      LowPower.powerDown(SLEEP_2S, ADC_OFF, BOD_OFF);
       }
 
     if (!pump_on && event.pressure < 800) {   // Pump is off, press low
@@ -72,11 +70,5 @@ void loop(void)
       
     } // END event.pressure
 
-  } // END LOOOP
+  } // END LOOP
   
-  else
-  {
-    delay(10); // sensor error
-  }
-
-} // end program
