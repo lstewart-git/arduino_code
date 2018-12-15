@@ -3,13 +3,13 @@
 // digital pin 0 : 
 // digital pin 1 : 
 // digital pin 2 : Button 1
-// digital pin 3 : led blue
-// digital pin 4 : Buzzer
-// digital pin 5 : led red
+// digital pin 3 : 
+// digital pin 4 : 
+// digital pin 5 : 
 // digital pin 6 : Tx Software Serial GPS
 // digital pin 7 : Rx Software Serial GPS
 // digital pin 8 : 
-// digital pin 9 : led green
+// digital pin 9 : 
 // digital pin 10 : 
 // digital pin 11 : 
 // digital pin 12 : pump power relay
