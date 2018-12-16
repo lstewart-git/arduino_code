@@ -5,7 +5,7 @@
 // Arduino Connection Layout:
 // digital pin 0 : 
 // digital pin 1 : 
-// digital pin 2 : Button 1
+// digital pin 2 : Button 1 (attach interrupt 0)
 // digital pin 3 : led blue
 // digital pin 4 : 
 // digital pin 5 : led red
@@ -37,7 +37,7 @@
 
 //instantiate breadboard objects
 les_rgb_led myLED(100);
-les_button_v2 myButton(350, 5);
+les_button_v2 myButton(2, 350, 5);
 les_pot myPot(69);
 
 //oled_display object
@@ -59,6 +59,9 @@ double distanceMiles = 0.0;
 double max_distance = 0.0;
 float max_speed = 0.0;
 float cur_speed = 0.0;
+unsigned long currentMillis = millis();
+unsigned long last_update = 0;
+bool update_screen = false;
 
 //  /////////////  SETUP  ////////////////////
 void setup()
@@ -72,12 +75,20 @@ void setup()
 }
 //   ///////////////// MAIN PROGRAM LOOP
 void loop()
-{
+{ 
+  // setup timer to only update display every 333 ms
+  update_screen = false;
+  currentMillis = millis();
+  if (currentMillis - last_update > 333){
+    last_update = currentMillis;
+    update_screen = true;
+    }
+    
+  myButton.Update();
+  myLED.Update();
   while (ss.available() > 0)
-	  
     if (gps.encode(ss.read())){
-      
-        distanceToHome = TinyGPSPlus::distanceBetween(
+          distanceToHome = TinyGPSPlus::distanceBetween(
           gps.location.lat(),
           gps.location.lng(),
           HOME_LAT, 
@@ -90,16 +101,15 @@ void loop()
        cur_speed = gps.speed.kmph();
        // check for new high speed
        if (cur_speed > max_speed) max_speed = cur_speed;
-         
+	      }
+
+      if (update_screen){
       if (myButton.state_flag == 1) displayLocation();
       if (myButton.state_flag == 2) displayDistance();
       if (myButton.state_flag == 3) displaySpeed();
       if (myButton.state_flag == 4) displayMax();
-	      }
-
-  myButton.Update();
-  myLED.Update();
-       
+      }
+      
  } // ////////////////  END MAIN PROGRAM LOOP
 
 void displayDistance()
@@ -185,15 +195,7 @@ void show_logo(){
   les_screen.println("     to Begin");
   les_screen.display();
 }
-/*
-void play_tone1(int hz1, int hz2){
-  tone(buzz_pin, hz1);
-  delay(500);
-  noTone(buzz_pin);
-  tone(buzz_pin, hz2);
-  delay(500);
-  noTone(buzz_pin);}
-*/
+
 
   
 // END PROGRAM
