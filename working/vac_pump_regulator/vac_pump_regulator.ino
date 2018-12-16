@@ -24,14 +24,13 @@
 
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
-#include <les_rgb_led.h>
-#include <les_button.h>
+#include <les_button_v2.h>
 #include <les_pot.h>
 #include <les_photoresistor.h>
 
 //instantiate breadboard objects
-les_rgb_led myLED(100);
-les_button myButton(350, 4);
+les_button_v2 button1(2, 350, 4);
+les_button_v2 button2(3, 350, 4);
 les_pot myPot(69);
 les_photoresistor myCDS(A1);
 
@@ -53,8 +52,7 @@ void setup()
   pinMode(relay_pin, OUTPUT);
   digitalWrite(relay_pin, LOW);
   les_screen.begin(SSD1306_SWITCHCAPVCC, 0x3C);
-  myLED.Setup();
-  myButton.Setup();
+  button1.Setup();
   myPot.Setup();
   myCDS.Setup();
   show_logo();
@@ -65,13 +63,12 @@ void setup()
 void loop()
 {
       // make sure relay off in startup mode
-      if ( myButton.state_flag == 0) digitalWrite(relay_pin, LOW);
+      if ( button1.state_flag == 0) digitalWrite(relay_pin, LOW);
 
       // update and read all components
       light_val = myCDS.photoresistor_value;
-      myButton.Update();
-      myLED.Update();
-      myCDS.Update();
+      button1.Update();
+       myCDS.Update();
       myPot.Update();
       // set trigger from pot reading
       trigger_level = myPot.pot_value;
@@ -81,18 +78,17 @@ void loop()
       if (light_val < minval) minval = light_val;
 
       // check for operational mode:
-      if ( myButton.state_flag == 1){
+      if ( button1.state_flag == 1){
    
         // light is off inside
         if (light_val < trigger_level){
-         myLED.SetOff();
+  
          digitalWrite(relay_pin, LOW); // turn off pump
          }
       
         // light is on inside
         else {
-        myLED.SetColor(255, 0, 255);
-        myLED.SetOn();
+
         digitalWrite(relay_pin, HIGH); // turn on pump
         }
 
@@ -100,12 +96,11 @@ void loop()
 
      
       // pick a screen to display
-      if ( myButton.state_flag == 1) display_mode1();
-      if ( myButton.state_flag == 2) display_mode_off();
+      if ( button1.state_flag == 1) display_mode1();
+      if ( button1.state_flag == 2) display_mode_off();
 	
 
-  myButton.Update();
-  myLED.Update();
+  button1.Update();
   myCDS.Update();
   myPot.Update();
   trigger_level = myPot.pot_value;
