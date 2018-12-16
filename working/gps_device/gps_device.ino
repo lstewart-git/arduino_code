@@ -32,12 +32,12 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include <les_rgb_led.h>
-#include <les_button.h>
+#include <les_button_v2.h>
 #include <les_pot.h>
 
 //instantiate breadboard objects
 les_rgb_led myLED(100);
-les_button myButton(350, 5);
+les_button_v2 myButton(350, 5);
 les_pot myPot(69);
 
 //oled_display object
