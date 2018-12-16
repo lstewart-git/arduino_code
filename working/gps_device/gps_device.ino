@@ -16,7 +16,7 @@
 // digital pin 10 : 
 // digital pin 11 : 
 // digital pin 12 : 
-// digital pin 13 : Buzzer
+// digital pin 13 : 
 // analog pin 0 : potentiometer
 // analog pin 1 :
 // analog pin 2 :
@@ -39,8 +39,6 @@
 les_rgb_led myLED(100);
 les_button myButton(350, 5);
 les_pot myPot(69);
-
-static const int buzz_pin = 13;
 
 //oled_display object
 #define OLED_RESET 12
@@ -70,9 +68,7 @@ void setup()
   myLED.Setup();
   myButton.Setup();
   myPot.Setup();
-  pinMode(buzz_pin, OUTPUT);
   show_logo();
-  play_tone1(2000, 4000);
 }
 //   ///////////////// MAIN PROGRAM LOOP
 void loop()
@@ -148,7 +144,7 @@ void displayLocation()
     les_screen.print("Long: ");
     les_screen.println(gps.location.lng(), 3);
     les_screen.display();
-    
+
 } // END displayLocation() FUNCTION
 
 void displaySpeed()
@@ -188,11 +184,8 @@ void show_logo(){
   les_screen.println("   Press Button");
   les_screen.println("     to Begin");
   les_screen.display();
-  // play a tune
-
- 
 }
-
+/*
 void play_tone1(int hz1, int hz2){
   tone(buzz_pin, hz1);
   delay(500);
@@ -200,5 +193,7 @@ void play_tone1(int hz1, int hz2){
   tone(buzz_pin, hz2);
   delay(500);
   noTone(buzz_pin);}
+*/
+
   
 // END PROGRAM
