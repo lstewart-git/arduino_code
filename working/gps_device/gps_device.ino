@@ -7,16 +7,16 @@
 // digital pin 1 : 
 // digital pin 2 : Button 1
 // digital pin 3 : led blue
-// digital pin 4 : Buzzer
+// digital pin 4 : 
 // digital pin 5 : led red
 // digital pin 6 : Tx Software Serial GPS
 // digital pin 7 : Rx Software Serial GPS
 // digital pin 8 : 
 // digital pin 9 : led green
-// digital pin 10 : SPI sd card reader
-// digital pin 11 : SPI sd card reader
-// digital pin 12 : SPI sd card reader
-// digital pin 13 : SPI sd card reader
+// digital pin 10 : 
+// digital pin 11 : 
+// digital pin 12 : 
+// digital pin 13 : Buzzer
 // analog pin 0 : potentiometer
 // analog pin 1 :
 // analog pin 2 :
@@ -40,7 +40,7 @@ les_rgb_led myLED(100);
 les_button myButton(350, 5);
 les_pot myPot(69);
 
-static const int buzz_pin = 4;
+static const int buzz_pin = 13;
 
 //oled_display object
 #define OLED_RESET 12
