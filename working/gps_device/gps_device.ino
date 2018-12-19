@@ -126,12 +126,12 @@ void displayDistance()
     les_screen.setCursor(0,0);
     les_screen.setTextSize(1);
           
-        double courseToHome =
-        TinyGPSPlus::courseTo(
-          gps.location.lat(),
-          gps.location.lng(),
-          HOME_LAT, 
-          HOME_LON);
+    double courseToHome =
+    TinyGPSPlus::courseTo(
+      gps.location.lat(),
+      gps.location.lng(),
+      HOME_LAT, 
+      HOME_LON);
   
 
     if (distanceToHome < 200 ){     
@@ -141,7 +141,7 @@ void displayDistance()
     }
     else{
       les_screen.println("Distance to Home:");
-      les_screen.print(distanceToHome / 1609.344, 2);
+      les_screen.print(distanceMiles, 2);
       les_screen.println(" miles"); 
     }
       
