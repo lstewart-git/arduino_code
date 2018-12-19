@@ -5,7 +5,7 @@
 // Arduino Connection Layout:
 // digital pin 0 : 
 // digital pin 1 : 
-// digital pin 2 : Button 1 (attach interrupt 0)
+// digital pin 2 : Button 1 
 // digital pin 3 : led blue
 // digital pin 4 : 
 // digital pin 5 : led red
@@ -36,9 +36,9 @@
 #include <les_pot.h>
 
 //instantiate breadboard objects
-les_rgb_led myLED(100);
-les_button_v2 myButton(2, 350, 5);
-les_pot myPot(69);
+les_rgb_led rgbLED(100);
+les_button_v2 button1(2, 350, 5);
+les_pot pot1(69);
 
 //oled_display object
 #define OLED_RESET 12
@@ -68,9 +68,9 @@ void setup()
 {
   ss.begin(GPSBaud);
   les_screen.begin(SSD1306_SWITCHCAPVCC, 0x3C);
-  myLED.Setup();
-  myButton.Setup();
-  myPot.Setup();
+  rgbLED.Setup();
+  button1.Setup();
+  pot1.Setup();
   show_logo();
 }
 //   ///////////////// MAIN PROGRAM LOOP
@@ -83,31 +83,39 @@ void loop()
     last_update = currentMillis;
     update_screen = true;
     }
-    
-  myButton.Update();
-  myLED.Update();
+  // update objects  
+  button1.Update();
+  rgbLED.Update();
+  
+  // check need for this while
   while (ss.available() > 0)
+    // if we have a new gps datum vector?
     if (gps.encode(ss.read())){
-          distanceToHome = TinyGPSPlus::distanceBetween(
-          gps.location.lat(),
-          gps.location.lng(),
-          HOME_LAT, 
-          HOME_LON);
-          
-       distanceMiles = distanceToHome / 1609.344;
-       // check for new max distance
-       if (distanceMiles > max_distance) max_distance = distanceMiles;
+      
+      // calculate dist from waypoint 0
+      distanceToHome = TinyGPSPlus::distanceBetween(
+      gps.location.lat(),
+      gps.location.lng(),
+      HOME_LAT, 
+      HOME_LON);
 
-       cur_speed = gps.speed.kmph();
-       // check for new high speed
-       if (cur_speed > max_speed) max_speed = cur_speed;
+      // convert meters to miles    
+      distanceMiles = distanceToHome / 1609.344;
+
+      // check for new max distance
+      if (distanceMiles > max_distance) max_distance = distanceMiles;
+
+      // get speed
+      cur_speed = gps.speed.kmph();
+      // check for new high speed
+      if (cur_speed > max_speed) max_speed = cur_speed;
 	      }
 
       if (update_screen){
-      if (myButton.state_flag == 1) displayLocation();
-      if (myButton.state_flag == 2) displayDistance();
-      if (myButton.state_flag == 3) displaySpeed();
-      if (myButton.state_flag == 4) displayMax();
+        if (button1.state_flag == 1) displayLocation();
+        if (button1.state_flag == 2) displayDistance();
+        if (button1.state_flag == 3) displaySpeed();
+        if (button1.state_flag == 4) displayMax();
       }
       
  } // ////////////////  END MAIN PROGRAM LOOP
