@@ -82,6 +82,8 @@ void loop()
       
       // change the trigger level as necc
       if (button1.state_flag == 0){
+      // keep pump power off in state 0 (initial setup)  
+      digitalWrite(relay_pin, LOW);
       trigger_level = init_light_val + 50 + (button2.state_flag * 50); 
         if ( trigger_level > 1023 ){
           trigger_level = init_light_val + 50;
@@ -114,6 +116,7 @@ void loop()
             if (pump_started == false){
               pump_started = true;
               pump_start_time = millis();
+              total_pump_cycles += 1;
             }
            
           }
@@ -156,6 +159,8 @@ void display_mode2()
     les_screen.println(total_pumpin_time_ms/1000);
     les_screen.print("Duty Cycle:");
     les_screen.println(float(total_pumpin_time_ms)/float(millis()));
+    les_screen.print("Total Cycles:");
+    les_screen.println(total_pump_cycles);
     les_screen.display();
 } 
 
