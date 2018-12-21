@@ -24,7 +24,9 @@
 // analog pin 4 : I2C SDA oled display
 // analog pin 5 : I2C SCL oled display
 
-// LIBRARIES
+
+
+#include <Arduino.h>
 #include <TinyGPS++.h>
 #include <SoftwareSerial.h>
 #include <SPI.h>
@@ -34,6 +36,13 @@
 #include <les_rgb_led.h>
 #include <les_button_v2.h>
 #include <les_pot.h>
+
+// declare functions:
+void show_logo();
+void displayDistance();
+void displayLocation();
+void displayMax();
+void displaySpeed();
 
 //instantiate breadboard objects
 les_rgb_led rgbLED(100);
@@ -63,6 +72,7 @@ unsigned long currentMillis = millis();
 unsigned long last_update = 0;
 bool update_screen = false;
 
+
 //  /////////////  SETUP  ////////////////////
 void setup()
 {
@@ -73,6 +83,7 @@ void setup()
   pot1.Setup();
   show_logo();
 }
+
 //   ///////////////// MAIN PROGRAM LOOP
 void loop()
 { 
@@ -88,7 +99,7 @@ void loop()
   rgbLED.Update();
   
   // check need for this while
-  while (ss.available() > 0)
+  while (ss.available() > 0){
     // if we have a new gps datum vector?
     if (gps.encode(ss.read())){
       
@@ -109,18 +120,20 @@ void loop()
       cur_speed = gps.speed.kmph();
       // check for new high speed
       if (cur_speed > max_speed) max_speed = cur_speed;
-	      }
-
+	      
+    }
       if (update_screen){
         if (button1.state_flag == 1) displayLocation();
         if (button1.state_flag == 2) displayDistance();
         if (button1.state_flag == 3) displaySpeed();
         if (button1.state_flag == 4) displayMax();
       }
-      
- } // ////////////////  END MAIN PROGRAM LOOP
+  }    
+ 
+} // ////////////////  END MAIN PROGRAM LOOP
 
-void displayDistance()
+
+ void displayDistance()
 {
     les_screen.clearDisplay();
     les_screen.setCursor(0,0);
@@ -197,7 +210,7 @@ void show_logo(){
   les_screen.setTextSize(1);
   les_screen.setTextColor(WHITE);
   les_screen.setCursor(0,0);
-  les_screen.println("GPS Interface");
+  les_screen.println("PIO GPS Interface");
   les_screen.println("By Lawrence Stewart");
   les_screen.println("   Press Button");
   les_screen.println("     to Begin");
