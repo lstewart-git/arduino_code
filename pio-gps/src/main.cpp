@@ -122,14 +122,15 @@ void loop()
       if (cur_speed > max_speed) max_speed = cur_speed;
 	      
     }
-      if (update_screen){
+      
+  }    
+ // outside serial read while() loop 
+ if (update_screen){
         if (button1.state_flag == 1) displayLocation();
         if (button1.state_flag == 2) displayDistance();
         if (button1.state_flag == 3) displaySpeed();
         if (button1.state_flag == 4) displayMax();
-      }
-  }    
- 
+  }
 } // ////////////////  END MAIN PROGRAM LOOP
 
 
