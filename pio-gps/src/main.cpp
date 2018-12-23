@@ -25,7 +25,6 @@
 // analog pin 5 : I2C SCL oled display
 
 
-
 #include <Arduino.h>
 #include <TinyGPS++.h>
 #include <SoftwareSerial.h>
@@ -36,6 +35,7 @@
 #include <les_rgb_led.h>
 #include <les_button_v2.h>
 #include <les_pot.h>
+#include <les_Autopilot.h>
 
 // declare functions:
 void show_logo();
@@ -57,10 +57,14 @@ Adafruit_SSD1306 les_screen(OLED_RESET);
 static const int RXPin = 7, TXPin = 6;
 static const uint32_t GPSBaud = 9600;
 static const double HOME_LAT = 39.454233, HOME_LON = -77.384811; 
+static const double WPT1_LAT = 39.177565, WPT1_LON = -77.267031;
 TinyGPSPlus gps;
 
 //software serial object
 SoftwareSerial ss(RXPin, TXPin);
+
+// Autopilot (logic) object
+les_Autopilot autopilot1 (0);
 
 // program logic variables
 double distanceToHome = 0.0;
@@ -81,6 +85,7 @@ void setup()
   rgbLED.Setup();
   button1.Setup();
   pot1.Setup();
+  autopilot1.Setup();
   show_logo();
 }
 
@@ -97,6 +102,7 @@ void loop()
   // update objects  
   button1.Update();
   rgbLED.Update();
+  autopilot1.Update();
   
   // check need for this while
   while (ss.available() > 0){
