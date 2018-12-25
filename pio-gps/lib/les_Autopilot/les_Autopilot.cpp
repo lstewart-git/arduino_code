@@ -4,9 +4,9 @@
 #include "les_Autopilot.h"
 
 
-les_Autopilot::les_Autopilot(int crapvar) 
+les_Autopilot::les_Autopilot(int parameter) 
 {
-mode = crapvar;
+mode = parameter;
 }
 
 void les_Autopilot::Setup()

@@ -64,7 +64,7 @@ TinyGPSPlus gps;
 SoftwareSerial ss(RXPin, TXPin);
 
 // Autopilot (logic) object
-les_Autopilot autopilot1 (0);
+les_Autopilot autopilot1 (7);
 
 // program logic variables
 double distanceToHome = 0.0;
