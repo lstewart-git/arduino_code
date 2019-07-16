@@ -217,7 +217,7 @@ void show_logo(){
   les_screen.setTextSize(1);
   les_screen.setTextColor(WHITE);
   les_screen.setCursor(0,0);
-  les_screen.println("PIO GPS Interface");
+  les_screen.println("b1 GPS Interface");
   les_screen.println("By Lawrence Stewart");
   les_screen.println("   Press Button");
   les_screen.println("     to Begin");
